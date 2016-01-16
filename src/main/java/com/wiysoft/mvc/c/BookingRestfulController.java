@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by weiliyang on 7/24/15.
@@ -110,9 +111,7 @@ public class BookingRestfulController {
         }
         Collections.sort(bookedForDates, new DateDescComparator());
 
-        List strs = new ArrayList();
-        for (Date bookedFor : bookedForDates)
-            strs.add(CommonUtils.parseStrFromDate(bookedFor, "yyyy-MM-dd"));
+        List strs = bookedForDates.stream().map(bookedFor -> CommonUtils.parseStrFromDate(bookedFor, "yyyy-MM-dd")).collect(Collectors.toList());
         Hashtable hash = new Hashtable();
         hash.put("bookings", bookings);
         hash.put("bookedFors", strs);
@@ -126,6 +125,7 @@ public class BookingRestfulController {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return new RestfulResponse(HttpServletResponse.SC_UNAUTHORIZED, "Not logged in yet.", new ArrayList(0));
         }
+
         User loginUser = (User) session.getAttribute("user");
         Integer countDeleted = bookingRepository.deleteByIdAndHolder(bookingId, loginUser);
         Hashtable hash = new Hashtable();
