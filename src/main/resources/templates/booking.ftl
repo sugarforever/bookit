@@ -8,11 +8,13 @@
                 <div class="m-pagination">
                     <ul class="pagination">
                     <#list Request.pages as page>
-                        <#assign cssClass = "">
-                        <#if Request.currentPage?? && Request.currentPage == page>
-                            <#assign cssClass = 'current'>
-                        </#if>
-                        <li><a class="page-item ${cssClass}" href="booking.html?page=${page}">${page}</a></li>
+                        <li>
+                            <#if Request.currentPage?? && Request.currentPage == page>
+                                <span class="page-item current">${page}</span>
+                            <#else>
+                                <a class="page-item" href="booking.html?page=${page}">${page}</a>
+                            </#if>
+                        </li>
                     </#list>
                     </ul>
                 </div>

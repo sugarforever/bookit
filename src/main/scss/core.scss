@@ -395,13 +395,12 @@ ul {
           margin-right: 6px;
 
           a {
-            color: #485563;
-            text-decoration: none;
+            color: #fff;
+            text-decoration: underline;
+          }
 
-            &.current {
-              color: #fff;
-              text-decoration: underline;
-            }
+          .current {
+            color: #485563;
           }
         }
       }
