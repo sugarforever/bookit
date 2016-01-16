@@ -1,0 +1,22 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: bookit
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bookit?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: root
+    initSQL: SET NAMES 'utf8mb4'
+    testOnBorrow: true
+    validationQuery: SELECT 1
+  jpa:
+    hibernate:
+      ddlAuto: update
+      namingStrategy: org.hibernate.cfg.ImprovedNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
