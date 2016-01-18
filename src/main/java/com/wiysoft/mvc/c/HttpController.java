@@ -68,6 +68,31 @@ public class HttpController {
         }
     }
 
+    @RequestMapping(value = "/profile.html", method = RequestMethod.GET)
+    public String profileGet(HttpServletRequest request, HttpSession session) {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        } else {
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}), true, false, true);
+            return "classic_template";
+        }
+    }
+
+    @RequestMapping(value = "/profile.html", method = RequestMethod.POST)
+    public String profilePost(@RequestParam String email, HttpServletRequest request, HttpSession session) throws Exception {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        }
+
+        User login = (User) loginUser;
+        login.setEmail(email);
+        User updated = userRepository.save(login);
+        session.setAttribute("user", updated);
+        return "redirect:/index.html";
+    }
+
     @RequestMapping(value = "/login.html", method = RequestMethod.GET)
     public String loginGet(HttpServletRequest request) {
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);

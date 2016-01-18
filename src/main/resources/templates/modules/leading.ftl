@@ -1,6 +1,6 @@
 <div class="top-container">
     <#if Session?? && Session.user?? && Session.user.name??>
-        <span class="welcome">${Session.user.name}</span><a class="logout" href="logout.html">退出</a>
+        <span class="welcome"><a href="/profile.html">${Session.user.name}</a></span><a class="logout" href="logout.html">退出</a>
 
         <ul class="options">
             <li><a href="/my-bookable.html">我要发布预约</a></li>
