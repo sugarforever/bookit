@@ -3,8 +3,10 @@ package com.wiysoft.mvc.c;
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateTimeUtils;
 import com.wiysoft.mvc.m.RestfulBookable;
+import com.wiysoft.mvc.m.RestfulResponse;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.Booking;
+import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
 import com.wiysoft.persistence.repository.BookingRepository;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -57,5 +60,16 @@ public class BookableRestfulController {
         hash.put("bookables", restfulBookables);
         hash.put("booked", hashtable);
         return hash;
+    }
+
+    @RequestMapping("/delete/")
+    public Object deleteBookable(@RequestParam long id, HttpSession session, HttpServletResponse response) {
+        if (session.getAttribute("user") == null || !(session.getAttribute("user") instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
+
+        bookableRepository.delete(id);
+        return new RestfulResponse(200, "", null);
     }
 }

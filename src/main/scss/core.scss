@@ -15,7 +15,7 @@ body {
 ul {
   margin: 0;
   padding: 0;
-  list-style: none;
+  list-style-type: none;
 }
 
 .center-container {
@@ -363,13 +363,79 @@ ul {
       ul {
         li {
           .m-item {
-            div {
+            display: inline-block;
+            width: 100%;
+
+            &.header {
+              div {
+                float: left;
+                padding: 10px;
+                box-sizing: border-box;
+              }
+            }
+            .cell {
               float: left;
               padding: 10px;
               box-sizing: border-box;
             }
+
             .name {
               width: 50%;
+              position: relative;
+
+              .icon {
+                width: 16px;
+                height: 16px;
+                margin-bottom: 5px;
+                background-image: url("/images/edit.png");
+                position: absolute;
+                right: 0;
+                top: 12px;
+
+                &:hover {
+                  cursor: pointer;
+                }
+              }
+
+              .edit {
+                position: absolute;
+                right: 0;
+                top: 26px;
+                text-align: center;
+                padding-top: 10px;
+                font-size: 12px;
+                box-sizing: border-box;
+                border: solid 1px transparent;
+
+
+                &.enable {
+                  background-color: #5cb85c;
+                  border: solid 1px #fff;
+                  padding-bottom: 10px;
+                  z-index: 99;
+
+                  ul {
+                    display: block;
+                  }
+                }
+
+                ul {
+                  display: none;
+
+                  li {
+                    margin-bottom: 5px;
+
+                    &:last-child {
+                      margin-bottom: 0px;
+                    }
+
+                    a {
+                      color: #fff;
+                      padding: 4px 8px;
+                    }
+                  }
+                }
+              }
             }
 
             .last-modified {

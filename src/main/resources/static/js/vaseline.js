@@ -93,6 +93,21 @@ function Vaseline() {
 
         }).on('click touchend', '.m-booking-items .m-booking-item .m-booking-name', function(event) {
             $(this).parent().find('.m-booking-cancel').show();
+        }).on('hover click touchend', '.m-my-bookable-items .m-item .icon', function(event) {
+            var edit = $(this).parent().find('.edit');
+            if ($(edit).hasClass("enable")) {
+                $(edit).removeClass("enable");
+            } else {
+                $(edit).addClass("enable");
+            }
+        }).on('click touchend', '.m-my-bookable-items .m-item .edit .delete', function(event) {
+            var id = $(this).data('bookable-id');
+            var src = this;
+            $.getJSON('/rest/bookable/delete/', {
+                id: id
+            }, function(response) {
+                $(src).closest('.m-item').remove();
+            });
         });
     };
 

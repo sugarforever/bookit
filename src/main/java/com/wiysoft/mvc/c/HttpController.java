@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -45,12 +46,13 @@ public class HttpController {
 
     @RequestMapping("/index.html")
     public String indexHtml() {
-        return "index";
+        return "classic_template";
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.GET)
-    public String signupGet() {
-        return "signup";
+    public String signupGet(HttpServletRequest request) {
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
+        return "classic_template";
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.POST)
@@ -61,13 +63,15 @@ public class HttpController {
             return "redirect:/index.html";
         } catch (UserManagementException ex) {
             request.setAttribute("error", ex.getMessage());
-            return "signup";
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
+            return "classic_template";
         }
     }
 
     @RequestMapping(value = "/login.html", method = RequestMethod.GET)
-    public String loginGet() {
-        return "login";
+    public String loginGet(HttpServletRequest request) {
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
+        return "classic_template";
     }
 
     @RequestMapping(value = "/login.html", method = RequestMethod.POST)
@@ -79,7 +83,8 @@ public class HttpController {
             return "redirect:/index.html";
         } else {
             request.setAttribute("error", "用户名与密码不正确");
-            return "login";
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
+            return "classic_template";
         }
     }
 
@@ -90,12 +95,13 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/create-bookable.html", method = RequestMethod.GET)
-    public String createBookableGet(HttpSession session) {
+    public String createBookableGet(HttpServletRequest request, HttpSession session) {
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
-            return "createBookable";
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"createBookable"}));
+            return "classic_template";
         }
     }
 
@@ -114,6 +120,44 @@ public class HttpController {
         }
     }
 
+    @RequestMapping(value = "/modify-bookable.html", method = RequestMethod.GET)
+    public String modifyBookableGet(@RequestParam long id, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        } else {
+            Bookable bookable = bookableRepository.findOne(id);
+
+            if (bookable != null) {
+                request.setAttribute("bookable", bookable);
+                ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"modifyBookable"}));
+                return "classic_template";
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
+        }
+    }
+
+    @RequestMapping(value = "/modify-bookable.html", method = RequestMethod.POST)
+    public String modifyBookablePost(@RequestParam String name, @RequestParam long bookableId, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        } else {
+            Bookable bookable = bookableRepository.findOne(bookableId);
+            if (bookable != null) {
+                bookable.setName(name);
+                bookable.setLastModified(Calendar.getInstance().getTime());
+                bookableRepository.save(bookable);
+                return "redirect:/my-bookable.html";
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
+        }
+    }
+
     @RequestMapping(value = "/my-bookable.html", method = RequestMethod.GET)
     public String bookableGet(@RequestParam(required = false) Integer page, HttpServletRequest request, HttpSession session) {
         User loginUser = null;
@@ -126,7 +170,8 @@ public class HttpController {
         List<Bookable> result = bookableRepository.findAllByOwnerOrderByLastModifiedDesc(loginUser);
         request.setAttribute("bookables", result);
         request.setAttribute("currentPage", page);
-        return "my-bookable";
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"my-bookable"}));
+        return "classic_template";
     }
 
     @RequestMapping(value = "/bookable.html", method = RequestMethod.GET)
@@ -134,7 +179,8 @@ public class HttpController {
         User owner = userService.getUser(ownerId);
         if (owner != null)
             request.setAttribute("owner", owner);
-        return "bookable";
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"bookable"}));
+        return "classic_template";
     }
 
     @RequestMapping(value = "/supplier.html", method = RequestMethod.GET)
@@ -142,7 +188,6 @@ public class HttpController {
         int pageIndex = page == null ? 0 : page - 1;
         PageRequest pageRequest = new PageRequest(pageIndex, 100);
         Page resultPage = userRepository.findAll(pageRequest);
-        int totalPages = resultPage.getTotalPages();
 
         List pages = new ArrayList();
         for (int i = 1; i <= resultPage.getTotalPages(); ++i) {
@@ -151,7 +196,8 @@ public class HttpController {
         request.setAttribute("pages", pages);
         request.setAttribute("suppliers", resultPage.getContent());
         request.setAttribute("currentPage", pageIndex + 1);
-        return "supplier";
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"supplier"}));
+        return "classic_template";
     }
 
     @RequestMapping(value = "/booking.html", method = RequestMethod.GET)
@@ -183,7 +229,7 @@ public class HttpController {
         request.setAttribute("pages", pages);
         request.setAttribute("currentPage", pageIndex + 1);
 
-
-        return "booking";
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"booking"}));
+        return "classic_template";
     }
 }
