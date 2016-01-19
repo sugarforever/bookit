@@ -23,6 +23,20 @@ ul {
   padding-top: 20px;
 }
 
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 5px;
+  background-image: url("/images/edit.png");
+  position: absolute;
+  right: 0;
+  top: 12px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .m-page {
   width: 100%;
   height: 100%;
@@ -383,20 +397,6 @@ ul {
               width: 50%;
               position: relative;
 
-              .icon {
-                width: 16px;
-                height: 16px;
-                margin-bottom: 5px;
-                background-image: url("/images/edit.png");
-                position: absolute;
-                right: 0;
-                top: 12px;
-
-                &:hover {
-                  cursor: pointer;
-                }
-              }
-
               .edit {
                 position: absolute;
                 right: 0;
@@ -491,6 +491,25 @@ ul {
         }
       }
     }
+  }
+
+  .m-profile {
+    .m-change-password-link {
+      padding: 10px 0px;
+      margin-top: 10px;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+
+  .m-error {
+    width: 100%;
+    padding: 10px;
+    font-weight: 300;
+    background-color: #ff0000;
+    margin-bottom: 20px;
   }
 }
 

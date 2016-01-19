@@ -28,6 +28,21 @@ ul {
 }
 
 /* line 26, ../../../scss/core.scss */
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 5px;
+  background-image: url("/images/edit.png");
+  position: absolute;
+  right: 0;
+  top: 12px;
+}
+/* line 35, ../../../scss/core.scss */
+.icon:hover {
+  cursor: pointer;
+}
+
+/* line 40, ../../../scss/core.scss */
 .m-page {
   width: 100%;
   height: 100%;
@@ -35,7 +50,7 @@ ul {
   margin: 0 auto;
   height: 100%;
 }
-/* line 32, ../../../scss/core.scss */
+/* line 46, ../../../scss/core.scss */
 .m-page .top-container {
   box-sizing: border-box;
   padding-left: 10px;
@@ -46,67 +61,67 @@ ul {
   font-size: 12px;
   line-height: 36px;
 }
-/* line 42, ../../../scss/core.scss */
+/* line 56, ../../../scss/core.scss */
 .m-page .top-container .m-item {
   margin-right: 6px;
 }
-/* line 45, ../../../scss/core.scss */
+/* line 59, ../../../scss/core.scss */
 .m-page .top-container .m-item:last-child {
   margin-right: 0px;
 }
-/* line 50, ../../../scss/core.scss */
+/* line 64, ../../../scss/core.scss */
 .m-page .top-container a {
   color: #ebebeb;
 }
-/* line 53, ../../../scss/core.scss */
+/* line 67, ../../../scss/core.scss */
 .m-page .top-container a.logout {
   margin-left: 10px;
 }
-/* line 58, ../../../scss/core.scss */
+/* line 72, ../../../scss/core.scss */
 .m-page .top-container ul {
   float: right;
 }
-/* line 62, ../../../scss/core.scss */
+/* line 76, ../../../scss/core.scss */
 .m-page .top-container ul.options li {
   float: left;
   margin-left: 10px;
 }
-/* line 67, ../../../scss/core.scss */
+/* line 81, ../../../scss/core.scss */
 .m-page .top-container ul.options li:first-child {
   margin-left: 10px;
 }
-/* line 74, ../../../scss/core.scss */
+/* line 88, ../../../scss/core.scss */
 .m-page .m-bookable {
   box-sizing: border-box;
 }
-/* line 77, ../../../scss/core.scss */
+/* line 91, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-owner {
   padding: 10px;
   color: #fff;
   background-color: #df691a;
   box-sizing: inherit;
 }
-/* line 84, ../../../scss/core.scss */
+/* line 98, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-owner-not-found {
   padding: 10px;
   color: #fff;
   background-color: #ff0000;
   box-sizing: inherit;
 }
-/* line 91, ../../../scss/core.scss */
+/* line 105, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-search {
   padding: 16px 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
   background-color: #485563;
 }
-/* line 97, ../../../scss/core.scss */
+/* line 111, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-search label {
   line-height: 32px;
   font-weight: 300;
   margin-right: 8px;
 }
-/* line 103, ../../../scss/core.scss */
+/* line 117, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-search .datetimepicker {
   padding: 4px;
   direction: ltr;
@@ -118,7 +133,7 @@ ul {
   outline: none;
   font-size: 14px;
 }
-/* line 115, ../../../scss/core.scss */
+/* line 129, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-search #search-bookable {
   color: #ffffff;
   background-color: #5bc0de;
@@ -138,19 +153,19 @@ ul {
   -ms-user-select: none;
   user-select: none;
 }
-/* line 134, ../../../scss/core.scss */
+/* line 148, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-search #search-bookable:hover {
   background-color: #5bc0ff;
 }
-/* line 140, ../../../scss/core.scss */
+/* line 154, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper {
   box-sizing: border-box;
 }
-/* line 143, ../../../scss/core.scss */
+/* line 157, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date {
   background-color: #4e5d6c;
 }
-/* line 146, ../../../scss/core.scss */
+/* line 160, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date .m-date {
   background-color: #df691a;
   color: #fff;
@@ -159,15 +174,15 @@ ul {
   font-weight: 300;
   font-size: 16px;
 }
-/* line 155, ../../../scss/core.scss */
+/* line 169, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date ul {
   min-height: 10px;
 }
-/* line 158, ../../../scss/core.scss */
+/* line 172, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date ul li {
   float: left;
 }
-/* line 160, ../../../scss/core.scss */
+/* line 174, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date ul li .m-bookable-item {
   margin: 15px;
   width: 150px;
@@ -183,23 +198,23 @@ ul {
   position: relative;
   opacity: 1;
 }
-/* line 175, ../../../scss/core.scss */
+/* line 189, ../../../scss/core.scss */
 .m-page .m-bookable .m-bookable-items-wrapper .m-bookable-date ul li .m-bookable-item.selected {
   display: none;
   opacity: 0;
   -webkit-transition: display 0s 1s, opacity 1s linear;
   transition: display 0s 1s, opacity 1s linear;
 }
-/* line 187, ../../../scss/core.scss */
+/* line 201, ../../../scss/core.scss */
 .m-page .m-booking {
   width: 100%;
   margin: 0 auto;
 }
-/* line 191, ../../../scss/core.scss */
+/* line 205, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper {
   box-sizing: border-box;
 }
-/* line 194, ../../../scss/core.scss */
+/* line 208, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-bookedfor {
   background-color: #df691a;
   color: #fff;
@@ -208,12 +223,12 @@ ul {
   font-weight: 300;
   font-size: 16px;
 }
-/* line 203, ../../../scss/core.scss */
+/* line 217, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items {
   background-color: #4e5d6c;
   min-height: 10px;
 }
-/* line 207, ../../../scss/core.scss */
+/* line 221, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item {
   margin: 15px;
   width: 150px;
@@ -229,22 +244,22 @@ ul {
   position: relative;
   opacity: 1;
 }
-/* line 222, ../../../scss/core.scss */
+/* line 236, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item.selected {
   display: none;
   opacity: 0;
   -webkit-transition: display 0s 1s, opacity 1s linear;
   transition: display 0s 1s, opacity 1s linear;
 }
-/* line 228, ../../../scss/core.scss */
+/* line 242, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item .m-booking-name {
   display: inline-block;
 }
-/* line 232, ../../../scss/core.scss */
+/* line 246, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item .m-booking-cancel {
   display: none;
 }
-/* line 237, ../../../scss/core.scss */
+/* line 251, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item:hover .m-booking-cancel {
   display: inline-block;
   position: absolute;
@@ -256,11 +271,11 @@ ul {
   font-size: 12px;
   opacity: 0.7;
 }
-/* line 248, ../../../scss/core.scss */
+/* line 262, ../../../scss/core.scss */
 .m-page .m-booking .m-booking-items-wrapper .m-booking-items .m-booking-item:hover .m-booking-cancel:hover {
   opacity: 1;
 }
-/* line 264, ../../../scss/core.scss */
+/* line 278, ../../../scss/core.scss */
 .m-page .wide-form {
   background-color: #4e5d6c;
   width: 100%;
@@ -269,40 +284,40 @@ ul {
   padding: 20px;
   box-sizing: border-box;
 }
-/* line 272, ../../../scss/core.scss */
+/* line 286, ../../../scss/core.scss */
 .m-page .wide-form .modal-footer {
   margin-top: 16px;
 }
-/* line 275, ../../../scss/core.scss */
+/* line 289, ../../../scss/core.scss */
 .m-page .wide-form .modal-footer .btn {
   margin-right: 10px;
 }
-/* line 277, ../../../scss/core.scss */
+/* line 291, ../../../scss/core.scss */
 .m-page .wide-form .modal-footer .btn:hover {
   cursor: pointer;
 }
-/* line 281, ../../../scss/core.scss */
+/* line 295, ../../../scss/core.scss */
 .m-page .wide-form .modal-footer .btn:last-child {
   margin-right: 0px;
 }
-/* line 287, ../../../scss/core.scss */
+/* line 301, ../../../scss/core.scss */
 .m-page .wide-form .modal-footer .btn-cancel a {
   color: #fff;
   text-decoration: none;
 }
-/* line 294, ../../../scss/core.scss */
+/* line 308, ../../../scss/core.scss */
 .m-page .wide-form .field {
   margin-bottom: 10px;
 }
-/* line 297, ../../../scss/core.scss */
+/* line 311, ../../../scss/core.scss */
 .m-page .wide-form .field .field-label {
   color: #ebebeb;
 }
-/* line 301, ../../../scss/core.scss */
+/* line 315, ../../../scss/core.scss */
 .m-page .wide-form .field .field-ui {
   margin: 10px auto;
 }
-/* line 305, ../../../scss/core.scss */
+/* line 319, ../../../scss/core.scss */
 .m-page .wide-form .form-control {
   width: 100%;
   height: 40px;
@@ -313,7 +328,7 @@ ul {
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   padding: 8px 16px;
 }
-/* line 315, ../../../scss/core.scss */
+/* line 329, ../../../scss/core.scss */
 .m-page .wide-form .btn {
   font-size: 16px;
   padding: 6px 8px;
@@ -324,17 +339,17 @@ ul {
   width: 100px;
   height: 35px;
 }
-/* line 327, ../../../scss/core.scss */
+/* line 341, ../../../scss/core.scss */
 .m-page .m-my-bookable {
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
 }
-/* line 332, ../../../scss/core.scss */
+/* line 346, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-control {
   margin-bottom: 10px;
 }
-/* line 335, ../../../scss/core.scss */
+/* line 349, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-control a.m-create-bookable {
   color: #ffffff;
   text-decoration: none;
@@ -352,51 +367,37 @@ ul {
   outline: none;
   display: inline-block;
 }
-/* line 352, ../../../scss/core.scss */
+/* line 366, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-control a.m-create-bookable:hover {
   background: #5bc0ef;
 }
-/* line 358, ../../../scss/core.scss */
+/* line 372, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items {
   background-color: #4e5d6c;
   display: inline-block;
   width: 100%;
 }
-/* line 365, ../../../scss/core.scss */
+/* line 379, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items ul li .m-item {
   display: inline-block;
   width: 100%;
 }
-/* line 370, ../../../scss/core.scss */
+/* line 384, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items ul li .m-item.header div {
   float: left;
   padding: 10px;
   box-sizing: border-box;
 }
-/* line 376, ../../../scss/core.scss */
+/* line 390, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items ul li .m-item .cell {
   float: left;
   padding: 10px;
   box-sizing: border-box;
 }
-/* line 382, ../../../scss/core.scss */
+/* line 396, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items ul li .m-item .name {
   width: 50%;
   position: relative;
-}
-/* line 386, ../../../scss/core.scss */
-.m-page .m-my-bookable .m-my-bookable-items ul li .m-item .name .icon {
-  width: 16px;
-  height: 16px;
-  margin-bottom: 5px;
-  background-image: url("/images/edit.png");
-  position: absolute;
-  right: 0;
-  top: 12px;
-}
-/* line 395, ../../../scss/core.scss */
-.m-page .m-my-bookable .m-my-bookable-items ul li .m-item .name .icon:hover {
-  cursor: pointer;
 }
 /* line 400, ../../../scss/core.scss */
 .m-page .m-my-bookable .m-my-bookable-items ul li .m-item .name .edit {
@@ -483,8 +484,25 @@ ul {
 .m-page .m-supplier .m-supplier-items-wrapper .m-supplier-item a.m-supplier-bookable {
   color: #fff;
 }
-
 /* line 497, ../../../scss/core.scss */
+.m-page .m-profile .m-change-password-link {
+  padding: 10px 0px;
+  margin-top: 10px;
+}
+/* line 501, ../../../scss/core.scss */
+.m-page .m-profile .m-change-password-link a {
+  color: #fff;
+}
+/* line 507, ../../../scss/core.scss */
+.m-page .m-error {
+  width: 100%;
+  padding: 10px;
+  font-weight: 300;
+  background-color: #ff0000;
+  margin-bottom: 20px;
+}
+
+/* line 516, ../../../scss/core.scss */
 .clearfix {
   clear: both;
 }

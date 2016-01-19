@@ -1,8 +1,6 @@
 package com.wiysoft.service;
 
-import com.wiysoft.exceptions.DuplicateUserEmailException;
-import com.wiysoft.exceptions.DuplicateUserNameException;
-import com.wiysoft.exceptions.UserManagementException;
+import com.wiysoft.exceptions.*;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +36,21 @@ public class UserService {
     @Transactional
     public User getUser(long id) {
         return userRepository.findOne(id);
+    }
+
+    @Transactional
+    public User changePassword(long id, String password, String newPassword) throws UserManagementException {
+        User user = userRepository.findOne(id);
+        if (user == null) {
+            throw new UserIdNotFoundException("User ID " + id + " not found.", null, null);
+        }
+
+        if (!user.getPassword().equals(password)) {
+            throw new WrongPasswordException("Wrong password.", null, user);
+        }
+
+        user.setPassword(newPassword);
+
+        return userRepository.save(user);
     }
 }

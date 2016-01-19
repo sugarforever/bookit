@@ -2,7 +2,9 @@ package com.wiysoft.mvc.c;
 
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateDescComparator;
+import com.wiysoft.exceptions.UserIdNotFoundException;
 import com.wiysoft.exceptions.UserManagementException;
+import com.wiysoft.exceptions.WrongPasswordException;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
@@ -142,6 +144,41 @@ public class HttpController {
             bookable.setOwner((User) loginUser);
             bookableRepository.save(bookable);
             return "redirect:/my-bookable.html";
+        }
+    }
+
+    @RequestMapping(value = "/change-password.html", method = RequestMethod.GET)
+    public String changePasswordGet(HttpServletRequest request, HttpSession session) {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        } else {
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
+            return "classic_template";
+        }
+    }
+
+    @RequestMapping(value = "/change-password.html", method = RequestMethod.POST)
+    public String changePasswordPost(@RequestParam String password, @RequestParam String newPassword, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+        Object loginUser = session.getAttribute("user");
+        if (loginUser == null || !(loginUser instanceof User)) {
+            return "redirect:/login.html";
+        } else {
+            try {
+                User updatedUser = userService.changePassword(((User) loginUser).getId(), password, newPassword);
+                request.setAttribute("user", updatedUser);
+            } catch (UserManagementException ex) {
+                if (ex instanceof WrongPasswordException) {
+                    request.setAttribute("error", "当前密码错误");
+                } else if (ex instanceof UserIdNotFoundException) {
+                    request.setAttribute("error", "用户id不存在");
+                } else {
+                    request.setAttribute("error", "内部错误，请重试");
+                }
+                ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
+                return "classic_template";
+            }
+            return "redirect:/index.html";
         }
     }
 

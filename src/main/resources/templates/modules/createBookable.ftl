@@ -1,9 +1,11 @@
 <div class="m-create-bookable wide-form">
+
 <#if Request.error??>
-    <div>
+    <div class="m-error">
         <span>${Request.error}</span>
     </div>
 </#if>
+
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/create-bookable.html">
         <div class="field">
             <label class="field-label">名称</label>

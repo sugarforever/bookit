@@ -1,9 +1,10 @@
-<#if Request.error??>
-<div>
-    <span>${Request.error}</span>
-</div>
-</#if>
 <div class="m-login wide-form">
+<#if Request.error??>
+    <div class="m-error">
+        <span>${Request.error}</span>
+    </div>
+</#if>
+
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/login.html">
         <div class="field">
             <label class="field-label">用户名</label>
