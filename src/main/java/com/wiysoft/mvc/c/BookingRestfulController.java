@@ -2,6 +2,7 @@ package com.wiysoft.mvc.c;
 
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateDescComparator;
+import com.wiysoft.exceptions.BookException;
 import com.wiysoft.mvc.m.CreateBookingRequest;
 import com.wiysoft.mvc.m.RestfulBooking;
 import com.wiysoft.mvc.m.RestfulResponse;
@@ -56,11 +57,14 @@ public class BookingRestfulController {
             }
 
             User loginUser = (User) session.getAttribute("user");
-            Booking booking = new Booking();
-            booking.setBookable(bookable);
-            booking.setBookedFor(bookedFor);
-            booking.setHolder(loginUser);
-            bookingRepository.save(booking);
+
+            try {
+                bookingService.book(loginUser, bookable, bookedFor);
+            } catch (BookException ex) {
+                ex.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                return new RestfulResponse(HttpServletResponse.SC_CONFLICT, ex.getMessage(), null);
+            }
         }
         return new RestfulResponse(200, "Booking created.", null);
     }

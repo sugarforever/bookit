@@ -35,6 +35,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b.bookedFor from Booking b where b.holder = ?1 group by b.bookedFor")
     public Page findBookedForByHolder(User holder, Pageable pageable);
 
+    @Query("select count(b.id) from Booking b where b.bookable.id = ?2 and b.bookedFor = ?1")
+    public Long findCountByBookedForAndBookable(Date bookedFor, long bookableId);
+
     @Transactional
     @Modifying
     @Query("delete from Booking b where b.id=?1 and b.holder=?2")

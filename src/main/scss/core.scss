@@ -171,11 +171,27 @@ ul {
 
           li {
             float: left;
+            position: relative;
+            margin: 15px;
+            display: table;
+
+            .error {
+              position: absolute;
+              top: 20px;
+              font-size: 12px;
+              left: 0;
+              width: 100%;
+              text-align: center;
+              background-color: #ee0000;
+              padding: 0 15px;
+              display: none;
+            }
+
             .m-bookable-item {
-              margin: 15px;
               width: 150px;
               height: 100px;
-              display: inline-block;
+              display: table-cell;
+              vertical-align: middle;
               background-color: #5cb85c;
               color: #fff;
               border-radius: 10px;
@@ -187,9 +203,12 @@ ul {
               opacity: 1;
 
               &.selected {
-                display: none;
-                opacity: 0;
-                transition: display 0s 1s, opacity 1s linear;
+                opacity: 0.6;
+              }
+
+              &.conflict {
+                background-color: #eeeeee;
+                color: #333333;
               }
             }
           }
@@ -376,6 +395,7 @@ ul {
 
       ul {
         li {
+
           .m-item {
             display: inline-block;
             width: 100%;

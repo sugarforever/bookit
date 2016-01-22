@@ -8,7 +8,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "t_booking", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"bookedFor", "bookable", "holder"})
+        @UniqueConstraint(columnNames = {"bookedFor", "bookable"})
 })
 public class Booking {
 

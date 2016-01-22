@@ -2,6 +2,7 @@ package com.wiysoft.service;
 
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateTimeUtils;
+import com.wiysoft.exceptions.BookException;
 import com.wiysoft.exceptions.DuplicateUserEmailException;
 import com.wiysoft.exceptions.DuplicateUserNameException;
 import com.wiysoft.exceptions.UserManagementException;
@@ -30,13 +31,18 @@ public class BookingService {
     private BookingRepository bookingRepository;
 
     @Transactional
-    public Booking book(User user, Bookable bookable, Date bookedFor) throws UserManagementException {
-        Booking booking = new Booking();
-        booking.setBookable(bookable);
-        booking.setHolder(user);
-        booking.setBookedFor(bookedFor);
+    public Booking book(User user, Bookable bookable, Date bookedFor) throws BookException {
+        Long count = bookingRepository.findCountByBookedForAndBookable(bookedFor, bookable.getId());
+        if (count == null || count == 0) {
+            Booking booking = new Booking();
+            booking.setBookable(bookable);
+            booking.setHolder(user);
+            booking.setBookedFor(bookedFor);
 
-        return bookingRepository.save(booking);
+            return bookingRepository.save(booking);
+        } else {
+            throw new BookException("已被预约", null, user);
+        }
     }
 
     @Transactional

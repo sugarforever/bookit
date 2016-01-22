@@ -29,6 +29,9 @@ function Vaseline() {
             },
             success: function(response) {
                 console.log(response);
+            },
+            fail: function(response) {
+                console.log(response);
             }
         });
     };
@@ -56,6 +59,10 @@ function Vaseline() {
         $('body').on('click', '.m-bookable-item', function(event) {
             event.preventDefault();
 
+            if ($(this).hasClass('conflict') || $(this).hasClass('selected')) {
+                return;
+            }
+
             var dis = this;
             var data = [{
                 bookableId: $(this).data('item-id'),
@@ -70,11 +77,22 @@ function Vaseline() {
                 'type': 'POST',
                 'url': '/rest/booking/create/',
                 'data': JSON.stringify({items: data}),
-                'dataType': 'json',
-                'success': function(response) {
-                    if (!$(dis).hasClass('selected')) {
-                        $(dis).addClass('selected');
-                    }
+                'dataType': 'json'
+            }).done(function(response) {
+                if (!$(dis).hasClass('selected')) {
+                    $(dis).addClass('selected');
+                }
+                setTimeout(function() {
+                    $(dis).parent().remove();
+                }, 1000);
+            }).fail(function(response) {
+                console.log(response);
+                if (response.status == 409) {
+                    $(dis).addClass('conflict');
+                    $(dis).parent().find('.error').show();
+                    setTimeout(function() {
+                        $(dis).parent().remove();
+                    }, 1000);
                 }
             });
         }).on('click', '.m-booking-items .m-booking-item .m-booking-cancel', function(event) {
@@ -160,6 +178,7 @@ function Vaseline() {
                $(item).attr('data-date', date);
                var li = $('<li></li>');
                li.append(item);
+               li.append($('<div class="error">该资源已被他人预约</div>'));
                ul.append(li);
            }
         });
