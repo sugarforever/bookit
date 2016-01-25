@@ -5,6 +5,7 @@ import com.wiysoft.common.DateDescComparator;
 import com.wiysoft.exceptions.UserIdNotFoundException;
 import com.wiysoft.exceptions.UserManagementException;
 import com.wiysoft.exceptions.WrongPasswordException;
+import com.wiysoft.mvc.m.forms.CreateBookableForm;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,7 +78,7 @@ public class HttpController {
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
-            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}), true, false, true);
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}), true, true, true);
             return "classic_template";
         }
     }
@@ -133,13 +135,15 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/create-bookable.html", method = RequestMethod.POST)
-    public String createBookablePost(@RequestParam String name, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public String createBookablePost(CreateBookableForm form, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
             Bookable bookable = new Bookable();
-            bookable.setName(name);
+            bookable.setName(form.getName());
+            bookable.setQuantity(form.getQuantity());
+            bookable.setUnit(form.getUnit());
             bookable.setLastModified(Calendar.getInstance().getTime());
             bookable.setOwner((User) loginUser);
             bookableRepository.save(bookable);
@@ -202,14 +206,16 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/modify-bookable.html", method = RequestMethod.POST)
-    public String modifyBookablePost(@RequestParam String name, @RequestParam long bookableId, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public String modifyBookablePost(CreateBookableForm form, @RequestParam long bookableId, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
             Bookable bookable = bookableRepository.findOne(bookableId);
             if (bookable != null) {
-                bookable.setName(name);
+                bookable.setName(form.getName());
+                bookable.setQuantity(form.getQuantity());
+                bookable.setUnit(form.getUnit());
                 bookable.setLastModified(Calendar.getInstance().getTime());
                 bookableRepository.save(bookable);
                 return "redirect:/my-bookable.html";

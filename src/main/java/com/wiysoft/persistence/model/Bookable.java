@@ -16,6 +16,10 @@ public class Bookable {
 
     @Column(nullable = false, unique = true)
     private String name;
+    @Column(nullable = true)
+    private Integer quantity;
+    @Column(nullable = true)
+    private String unit;
     @Column(nullable = false)
     private Date lastModified;
 
@@ -52,5 +56,21 @@ public class Bookable {
 
     public void setOwner(final User owner) {
         this.owner = owner;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(final Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(final String unit) {
+        this.unit = unit;
     }
 }
