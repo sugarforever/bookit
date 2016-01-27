@@ -5,7 +5,10 @@ import com.wiysoft.common.DateDescComparator;
 import com.wiysoft.exceptions.UserIdNotFoundException;
 import com.wiysoft.exceptions.UserManagementException;
 import com.wiysoft.exceptions.WrongPasswordException;
+import com.wiysoft.mvc.m.forms.ChangePasswordForm;
 import com.wiysoft.mvc.m.forms.CreateBookableForm;
+import com.wiysoft.mvc.m.forms.LoginForm;
+import com.wiysoft.mvc.m.forms.SignupForm;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
@@ -60,9 +63,9 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.POST)
-    public String signupPost(@RequestParam String name, @RequestParam String password, @RequestParam String email, HttpServletRequest request, HttpSession session) throws Exception {
+    public String signupPost(SignupForm signupForm, HttpServletRequest request, HttpSession session) throws Exception {
         try {
-            User savedUser = userService.createUser(name, email, password);
+            User savedUser = userService.createUser(signupForm.getName(), signupForm.getEmail(), signupForm.getPassword());
             session.setAttribute("user", savedUser);
             return "redirect:/index.html";
         } catch (UserManagementException ex) {
@@ -104,8 +107,8 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/login.html", method = RequestMethod.POST)
-    public String loginPost(@RequestParam String name, @RequestParam String password, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
-        User existed = userRepository.findByNameAndPassword(name, password);
+    public String loginPost(LoginForm loginForm, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+        User existed = userRepository.findByNameAndPassword(loginForm.getName(), loginForm.getPassword());
 
         session.setAttribute("user", existed);
         if (existed != null) {
@@ -163,13 +166,13 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/change-password.html", method = RequestMethod.POST)
-    public String changePasswordPost(@RequestParam String password, @RequestParam String newPassword, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public String changePasswordPost(ChangePasswordForm changePasswordForm, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
             try {
-                User updatedUser = userService.changePassword(((User) loginUser).getId(), password, newPassword);
+                User updatedUser = userService.changePassword(((User) loginUser).getId(), changePasswordForm.getPassword(), changePasswordForm.getNewPassword());
                 request.setAttribute("user", updatedUser);
             } catch (UserManagementException ex) {
                 if (ex instanceof WrongPasswordException) {

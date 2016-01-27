@@ -87,7 +87,9 @@ function Vaseline() {
                 }, 1000);
             }).fail(function(response) {
                 console.log(response);
-                if (response.status == 409) {
+                if (response.status == 401) {
+                    alert("您未登录!");
+                } else if (response.status == 409) {
                     $(dis).addClass('conflict');
                     $(dis).parent().find('.error').show();
                     setTimeout(function() {
