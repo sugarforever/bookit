@@ -94,14 +94,20 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/profile.html", method = RequestMethod.POST)
-    public String profilePost(@RequestParam String email, HttpServletRequest request, HttpSession session) throws Exception {
+    public String profilePost(@Valid @ModelAttribute ProfileForm profileForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
+        if (bindingResult.hasErrors()) {
+            request.setAttribute("errors", bindingResult.getAllErrors());
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}));
+            return "classic_template";
+        }
+
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         }
 
         User login = (User) loginUser;
-        login.setEmail(email);
+        login.setEmail(profileForm.getEmail());
         User updated = userRepository.save(login);
         session.setAttribute("user", updated);
         return "redirect:/index.html";
@@ -186,7 +192,7 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/change-password.html", method = RequestMethod.POST)
-    public String changePasswordPost(@Valid ChangePasswordForm changePasswordForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
+    public String changePasswordPost(@Valid @ModelAttribute ChangePasswordForm changePasswordForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
@@ -227,9 +233,7 @@ public class HttpController {
 
             ModelAndView model = new ModelAndView();
             if (bookable != null) {
-                //request.setAttribute("bookable", bookable);
                 ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"modifyBookable"}));
-
 
                 ModifyBookableForm form = new ModifyBookableForm();
                 form.setId(bookable.getId());

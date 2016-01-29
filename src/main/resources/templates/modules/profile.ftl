@@ -9,7 +9,7 @@
         <span>${Request.error}</span>
     </div>
 </#if>
-
+<#include 'components/validationError.ftl'>
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/profile.html">
         <div class="field">
             <label class="field-label">电子邮箱</label>
