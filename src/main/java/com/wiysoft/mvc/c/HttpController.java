@@ -5,10 +5,7 @@ import com.wiysoft.common.DateDescComparator;
 import com.wiysoft.exceptions.UserIdNotFoundException;
 import com.wiysoft.exceptions.UserManagementException;
 import com.wiysoft.exceptions.WrongPasswordException;
-import com.wiysoft.mvc.m.forms.ChangePasswordForm;
-import com.wiysoft.mvc.m.forms.CreateBookableForm;
-import com.wiysoft.mvc.m.forms.LoginForm;
-import com.wiysoft.mvc.m.forms.SignupForm;
+import com.wiysoft.mvc.m.forms.*;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
@@ -19,15 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.BindStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -63,15 +64,21 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.POST)
-    public String signupPost(SignupForm signupForm, HttpServletRequest request, HttpSession session) throws Exception {
-        try {
-            User savedUser = userService.createUser(signupForm.getName(), signupForm.getEmail(), signupForm.getPassword());
-            session.setAttribute("user", savedUser);
-            return "redirect:/index.html";
-        } catch (UserManagementException ex) {
-            request.setAttribute("error", ex.getMessage());
+    public String signupPost(@Valid SignupForm signupForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
+        if (bindingResult.hasErrors()) {
+            request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
             return "classic_template";
+        } else {
+            try {
+                User savedUser = userService.createUser(signupForm.getName(), signupForm.getEmail(), signupForm.getPassword());
+                session.setAttribute("user", savedUser);
+                return "redirect:/index.html";
+            } catch (UserManagementException ex) {
+                request.setAttribute("error", ex.getMessage());
+                ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
+                return "classic_template";
+            }
         }
     }
 
@@ -101,20 +108,27 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/login.html", method = RequestMethod.GET)
-    public String loginGet(HttpServletRequest request) {
+    public Object loginGet(HttpServletRequest request) {
+        ModelAndView model = new ModelAndView("classic_template");
+        model.addObject("loginForm", new LoginForm());
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
-        return "classic_template";
+        return model;
     }
 
     @RequestMapping(value = "/login.html", method = RequestMethod.POST)
-    public String loginPost(LoginForm loginForm, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
-        User existed = userRepository.findByNameAndPassword(loginForm.getName(), loginForm.getPassword());
-
-        session.setAttribute("user", existed);
-        if (existed != null) {
-            return "redirect:/index.html";
+    public Object loginPost(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
+        if (!bindingResult.hasErrors()) {
+            User existed = userRepository.findByNameAndPassword(loginForm.getName(), loginForm.getPassword());
+            session.setAttribute("user", existed);
+            if (existed != null) {
+                return "redirect:/index.html";
+            } else {
+                request.setAttribute("error", "用户名与密码不正确");
+                ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
+                return "classic_template";
+            }
         } else {
-            request.setAttribute("error", "用户名与密码不正确");
+            request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
             return "classic_template";
         }
@@ -138,7 +152,13 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/create-bookable.html", method = RequestMethod.POST)
-    public String createBookablePost(CreateBookableForm form, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public String createBookablePost(@Valid CreateBookableForm form, BindingResult bindingResult, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+        if (bindingResult.hasErrors()) {
+            request.setAttribute("errors", bindingResult.getAllErrors());
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"createBookable"}));
+            return "classic_template";
+        }
+
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
@@ -166,7 +186,13 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/change-password.html", method = RequestMethod.POST)
-    public String changePasswordPost(ChangePasswordForm changePasswordForm, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public String changePasswordPost(@Valid ChangePasswordForm changePasswordForm, BindingResult bindingResult, HttpServletRequest request, HttpSession session) throws Exception {
+        if (bindingResult.hasErrors()) {
+            request.setAttribute("errors", bindingResult.getAllErrors());
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
+            return "classic_template";
+        }
+
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
@@ -190,31 +216,52 @@ public class HttpController {
     }
 
     @RequestMapping(value = "/modify-bookable.html", method = RequestMethod.GET)
-    public String modifyBookableGet(@RequestParam long id, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public Object modifyBookableGet(@RequestParam(required = false) Long id, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
+        } else if (id == null) {
+            return "redirect:/my-bookable.html";
         } else {
             Bookable bookable = bookableRepository.findOne(id);
 
+            ModelAndView model = new ModelAndView();
             if (bookable != null) {
-                request.setAttribute("bookable", bookable);
+                //request.setAttribute("bookable", bookable);
                 ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"modifyBookable"}));
-                return "classic_template";
+
+
+                ModifyBookableForm form = new ModifyBookableForm();
+                form.setId(bookable.getId());
+                form.setName(bookable.getName());
+                form.setQuantity(bookable.getQuantity());
+                form.setUnit(bookable.getUnit());
+
+                model.addObject("modifyBookableForm", form);
+                model.setViewName("classic_template");
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return null;
             }
+
+            return model;
         }
     }
 
     @RequestMapping(value = "/modify-bookable.html", method = RequestMethod.POST)
-    public String modifyBookablePost(CreateBookableForm form, @RequestParam long bookableId, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+    public Object modifyBookablePost(@Valid ModifyBookableForm form, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+        if (bindingResult.hasErrors()) {
+            request.setAttribute("errors", bindingResult.getAllErrors());
+            ModelAndView model = new ModelAndView("classic_template");
+            model.addObject("modifyBookableForm", form);
+            ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"modifyBookable"}));
+            return model;
+        }
+
         Object loginUser = session.getAttribute("user");
         if (loginUser == null || !(loginUser instanceof User)) {
             return "redirect:/login.html";
         } else {
-            Bookable bookable = bookableRepository.findOne(bookableId);
+            Bookable bookable = bookableRepository.findOne(form.getId());
             if (bookable != null) {
                 bookable.setName(form.getName());
                 bookable.setQuantity(form.getQuantity());

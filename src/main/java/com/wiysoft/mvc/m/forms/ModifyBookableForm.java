@@ -2,15 +2,27 @@ package com.wiysoft.mvc.m.forms;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by weiliyang on 1/25/16.
  */
-public class CreateBookableForm {
+public class ModifyBookableForm {
 
+    @NotNull
+    private Long id;
     @NotEmpty
     private String name;
     private Integer quantity;
     private String unit;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

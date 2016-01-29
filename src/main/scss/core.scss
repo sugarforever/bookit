@@ -291,7 +291,7 @@ ul {
   .m-login {
   }
 
-  .m-create-bookable {
+  .m-create-bookable, .m-modify-bookable {
   }
 
   .wide-form {
@@ -535,4 +535,19 @@ ul {
 
 .clearfix {
   clear: both;
+}
+
+.validation-error {
+  background-color: red;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: 300;
+  
+  ul {
+    li {
+      &:before {
+        content: '-';
+      }
+    }
+  }
 }

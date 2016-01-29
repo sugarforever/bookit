@@ -4,18 +4,22 @@
         <span>${Request.error}</span>
     </div>
 </#if>
-
+    <#include 'components/validationError.ftl'>
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/login.html">
+        <@spring.bind "loginForm" />
         <div class="field">
             <label class="field-label">用户名</label>
-
-            <div class="field-ui"><input type="text" name="name" class="form-control"></div>
+            <div class="field-ui">
+                <@spring.bind path="loginForm.name"/>
+                <input type="text" name="name" class="form-control">
+            </div>
         </div>
         <div class="field">
             <label class="field-label">密码</label>
-
-            <div class="field-ui"><input type="password" name="password" placeholder="" autocomplete="off"
-                                         class="form-control"></div>
+            <div class="field-ui">
+                <@spring.bind path="loginForm.password"/>
+                <input type="password" name="password" placeholder="" autocomplete="off" class="form-control">
+            </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-create">登录</button>

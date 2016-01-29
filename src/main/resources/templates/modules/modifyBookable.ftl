@@ -1,23 +1,23 @@
-<div class="m-create-bookable wide-form">
+<div class="m-modify-bookable wide-form">
 <#if Request.error??>
     <div>
         <span>${Request.error}</span>
     </div>
 </#if>
-    <#assign name = ''>
-    <#if Request.bookable??>
-        <#assign name = '${Request.bookable.name}'>
-        <#assign quantity = ''>
-        <#if Request.bookable.quantity?? >
-            <#assign quantity = '${Request.bookable.quantity}'>
-        </#if>
-        <#assign unit = ''>
-        <#if Request.bookable.unit?? >
-            <#assign unit = '${Request.bookable.unit}'>
-        </#if>
-    </#if>
+<#assign id = ''>
+<#assign name = ''>
+<#assign quantity = ''>
+<#assign unit = ''>
+<#if modifyBookableForm??>
+    <#assign id = '${modifyBookableForm.id}'>
+    <#assign name = '${modifyBookableForm.name}'>
+    <#assign quantity = '${modifyBookableForm.quantity}'>
+    <#assign unit = '${modifyBookableForm.unit}'>
+</#if>
+    <#include 'components/validationError.ftl'>
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/modify-bookable.html">
-        <input type="hidden" name="bookableId" value="${Request.bookable.id}" >
+        <input type="hidden" name="id" value="${id}">
+
         <div class="field">
             <label class="field-label">名称</label>
             <div class="field-ui"><input type="text" name="name" autocomplete="off" class="form-control" value="${name}"></div>

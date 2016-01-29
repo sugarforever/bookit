@@ -524,4 +524,16 @@ ul {
   clear: both;
 }
 
+/* line 540, ../../../scss/core.scss */
+.validation-error {
+  background-color: red;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: 300;
+}
+/* line 548, ../../../scss/core.scss */
+.validation-error ul li:before {
+  content: '-';
+}
+
 /*# sourceMappingURL=core.css.map */

@@ -5,7 +5,7 @@
         <span>${Request.error}</span>
     </div>
 </#if>
-
+    <#include 'components/validationError.ftl'>
     <form class="modal-content" enctype="multipart/form-data" method="post" action="/signup.html">
         <div class="field">
             <label class="field-label">用户名</label>
