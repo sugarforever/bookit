@@ -1,11 +1,11 @@
 <div class="m-bookable-status">
     <#assign current = .now?string("yyyy-MM-dd")>
-    <div class="m-bookable-status-search">
+    <div class="m-bookable-status-search m-start-end-date-search">
         <label for="start-datetime-picker">起始日期</label>
         <input id="start-datetime-picker" class="datetimepicker datetime-start" type="text" value="${current}">
         <label for="end-datetime-picker">截止日期</label>
         <input id="end-datetime-picker" class="datetimepicker datetime-end" type="text" value="${current}">
-        <input id="search-bookable-status" type="button" value="搜索">
+        <input id="search-bookable-status" class="search-button" type="button" value="搜索">
     </div>
     <!--div class="controller">
         <input id="save-bookings" class="btn" type="button" value="Book Now">
