@@ -2,8 +2,10 @@ package com.wiysoft.mvc.c;
 
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateDescComparator;
+import com.wiysoft.common.DateTimeUtils;
 import com.wiysoft.exceptions.BookException;
 import com.wiysoft.mvc.m.CreateBookingRequest;
+import com.wiysoft.mvc.m.RestfulBookable;
 import com.wiysoft.mvc.m.RestfulBooking;
 import com.wiysoft.mvc.m.RestfulResponse;
 import com.wiysoft.persistence.model.Bookable;
@@ -135,5 +137,26 @@ public class BookingRestfulController {
         Hashtable hash = new Hashtable();
         hash.put("deleted", countDeleted);
         return new RestfulResponse(200, "", hash);
+    }
+
+    @RequestMapping(value = "/my-booking-status/", method = RequestMethod.GET)
+    public Object myBookingStatus(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date bookedForStart, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date bookedForEnd, HttpSession session, HttpServletResponse response) {
+        if (session.getAttribute("user") == null || !(session.getAttribute("user") instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return new RestfulResponse(HttpServletResponse.SC_UNAUTHORIZED, "Not logged in yet.", new ArrayList(0));
+        }
+
+        User loginUser = (User) session.getAttribute("user");
+        Hashtable<Bookable, List<Booking>> hash = bookingService.findBookingsByOwnerAndBookedFor(loginUser, bookedForStart, DateTimeUtils.dateAdjust(bookedForEnd, Calendar.DAY_OF_YEAR, 1));
+        Hashtable<String, List<RestfulBooking>> restfulHash = new Hashtable<>();
+        for (Bookable bookable : hash.keySet()) {
+            restfulHash.put(bookable.getName(), new ArrayList<>());
+            for (Booking booking : hash.get(bookable)) {
+                RestfulBooking restfulBooking = RestfulBooking.build(booking);
+                restfulHash.get(bookable.getName()).add(restfulBooking);
+            }
+        }
+
+        return new RestfulResponse(200, "", restfulHash);
     }
 }

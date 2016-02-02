@@ -6,6 +6,7 @@ import com.wiysoft.exceptions.UserIdNotFoundException;
 import com.wiysoft.exceptions.UserManagementException;
 import com.wiysoft.exceptions.WrongPasswordException;
 import com.wiysoft.mvc.m.forms.*;
+import com.wiysoft.mvc.v.ViewConstants;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookableRepository;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.BindStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,13 +54,13 @@ public class HttpController {
 
     @RequestMapping("/index.html")
     public String indexHtml() {
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.GET)
     public String signupGet(HttpServletRequest request) {
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 
     @RequestMapping(value = "/signup.html", method = RequestMethod.POST)
@@ -68,7 +68,7 @@ public class HttpController {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         } else {
             try {
                 User savedUser = userService.createUser(signupForm.getName(), signupForm.getEmail(), signupForm.getPassword());
@@ -77,7 +77,7 @@ public class HttpController {
             } catch (UserManagementException ex) {
                 request.setAttribute("error", ex.getMessage());
                 ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"signup"}), true, false, true);
-                return "classic_template";
+                return ViewConstants.VIEW_CLASSIC_TEMPLATE;
             }
         }
     }
@@ -89,7 +89,7 @@ public class HttpController {
             return "redirect:/login.html";
         } else {
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}), true, true, true);
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
     }
 
@@ -98,7 +98,7 @@ public class HttpController {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"profile"}));
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
 
         Object loginUser = session.getAttribute("user");
@@ -115,7 +115,7 @@ public class HttpController {
 
     @RequestMapping(value = "/login.html", method = RequestMethod.GET)
     public Object loginGet(HttpServletRequest request) {
-        ModelAndView model = new ModelAndView("classic_template");
+        ModelAndView model = new ModelAndView(ViewConstants.VIEW_CLASSIC_TEMPLATE);
         model.addObject("loginForm", new LoginForm());
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
         return model;
@@ -131,12 +131,12 @@ public class HttpController {
             } else {
                 request.setAttribute("error", "用户名与密码不正确");
                 ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
-                return "classic_template";
+                return ViewConstants.VIEW_CLASSIC_TEMPLATE;
             }
         } else {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"login"}), true, false, true);
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
     }
 
@@ -153,7 +153,7 @@ public class HttpController {
             return "redirect:/login.html";
         } else {
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"createBookable"}));
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
     }
 
@@ -162,7 +162,7 @@ public class HttpController {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"createBookable"}));
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
 
         Object loginUser = session.getAttribute("user");
@@ -187,7 +187,7 @@ public class HttpController {
             return "redirect:/login.html";
         } else {
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
     }
 
@@ -196,7 +196,7 @@ public class HttpController {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
-            return "classic_template";
+            return ViewConstants.VIEW_CLASSIC_TEMPLATE;
         }
 
         Object loginUser = session.getAttribute("user");
@@ -215,7 +215,7 @@ public class HttpController {
                     request.setAttribute("error", "内部错误，请重试");
                 }
                 ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"changePassword"}));
-                return "classic_template";
+                return ViewConstants.VIEW_CLASSIC_TEMPLATE;
             }
             return "redirect:/index.html";
         }
@@ -242,7 +242,7 @@ public class HttpController {
                 form.setUnit(bookable.getUnit());
 
                 model.addObject("modifyBookableForm", form);
-                model.setViewName("classic_template");
+                model.setViewName(ViewConstants.VIEW_CLASSIC_TEMPLATE);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -255,7 +255,7 @@ public class HttpController {
     public Object modifyBookablePost(@Valid ModifyBookableForm form, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
         if (bindingResult.hasErrors()) {
             request.setAttribute("errors", bindingResult.getAllErrors());
-            ModelAndView model = new ModelAndView("classic_template");
+            ModelAndView model = new ModelAndView(ViewConstants.VIEW_CLASSIC_TEMPLATE);
             model.addObject("modifyBookableForm", form);
             ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"modifyBookable"}));
             return model;
@@ -286,6 +286,8 @@ public class HttpController {
         Object o = session.getAttribute("user");
         if (o != null && (o instanceof User)) {
             loginUser = (User) o;
+        } else {
+            return "redirect:/login.html";
         }
 
         //Page<Bookable> result = bookableRepository.findAllByOwnerOrderByLastModifiedDesc(loginUser, new PageRequest(page == null ? 0 : page - 1, 20));
@@ -293,7 +295,7 @@ public class HttpController {
         request.setAttribute("bookables", result);
         request.setAttribute("currentPage", page);
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"my-bookable"}));
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 
     @RequestMapping(value = "/bookable.html", method = RequestMethod.GET)
@@ -302,7 +304,7 @@ public class HttpController {
         if (owner != null)
             request.setAttribute("owner", owner);
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"bookable"}));
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 
     @RequestMapping(value = "/supplier.html", method = RequestMethod.GET)
@@ -319,7 +321,7 @@ public class HttpController {
         request.setAttribute("suppliers", resultPage.getContent());
         request.setAttribute("currentPage", pageIndex + 1);
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"supplier"}));
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 
     @RequestMapping(value = "/booking.html", method = RequestMethod.GET)
@@ -352,6 +354,20 @@ public class HttpController {
         request.setAttribute("currentPage", pageIndex + 1);
 
         ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"booking"}));
-        return "classic_template";
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
+    }
+
+    @RequestMapping(value = "/my-bookable-status.html", method = RequestMethod.GET)
+    public String myBookableStatusGet(@RequestParam(required = false) Integer page, HttpServletRequest request, HttpSession session) {
+        User loginUser = null;
+        Object o = session.getAttribute("user");
+        if (o != null && (o instanceof User)) {
+            loginUser = (User) o;
+        } else {
+            return "redirect:/login.html";
+        }
+
+        ControllerUtils.fillTemplate(request, Arrays.asList(new String[]{"myBookableStatus"}));
+        return ViewConstants.VIEW_CLASSIC_TEMPLATE;
     }
 }

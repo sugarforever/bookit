@@ -20,5 +20,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+  freemarker:
+    cache: false
   messages:
     basename: lang/messages

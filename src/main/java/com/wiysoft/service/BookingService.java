@@ -3,15 +3,11 @@ package com.wiysoft.service;
 import com.wiysoft.common.CommonUtils;
 import com.wiysoft.common.DateTimeUtils;
 import com.wiysoft.exceptions.BookException;
-import com.wiysoft.exceptions.DuplicateUserEmailException;
-import com.wiysoft.exceptions.DuplicateUserNameException;
-import com.wiysoft.exceptions.UserManagementException;
 import com.wiysoft.mvc.m.RestfulBooking;
 import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.Booking;
 import com.wiysoft.persistence.model.User;
 import com.wiysoft.persistence.repository.BookingRepository;
-import com.wiysoft.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,5 +80,20 @@ public class BookingService {
     @Transactional
     public Integer deleteByIdAndHolder(long id, User holder) {
         return bookingRepository.deleteByIdAndHolder(id, holder);
+    }
+
+    public Hashtable<Bookable, List<Booking>> findBookingsByOwnerAndBookedFor(User owner, Date bookedForStart, Date bookedForEnd) {
+        List<Booking> bookings = bookingRepository.findBookingsByOwnerAndBookedFor(owner, bookedForStart, bookedForEnd);
+
+        Hashtable<Bookable, List<Booking>> hash = new Hashtable<>();
+        for (Booking booking : bookings) {
+            if (!hash.containsKey(booking.getBookable())) {
+                hash.put(booking.getBookable(), new ArrayList<>());
+            }
+
+            hash.get(booking.getBookable()).add(booking);
+        }
+
+        return hash;
     }
 }

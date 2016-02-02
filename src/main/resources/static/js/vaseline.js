@@ -5,6 +5,8 @@
 function Vaseline() {
     var self = this;
 
+    self.bookableStatus = new BookableStatus();
+
     self.init = function() {
         $(document).ready(function() {
             self.config = {
@@ -16,6 +18,8 @@ function Vaseline() {
             };
             self.bindEventHandlers();
             self.loadPageContent();
+
+            self.bookableStatus.init();
         });
     };
 
@@ -187,4 +191,91 @@ function Vaseline() {
 
         self.config.bookableItemsWrapper.append(itemContainer);
     }
-}
+};
+
+function BookableStatus() {
+    var self = this;
+    self.config = {
+        bookableStatusModule: '.m-bookable-status',
+        bookableStatusStart: '.m-bookable-status .m-bookable-status-search .datetime-start',
+        bookableStatusEnd: '.m-bookable-status .m-bookable-status-search .datetime-end',
+        bookableStatusSearchButton: '#search-bookable-status',
+        bookableStatusItemsWrapperRows: '.m-bookable-status .m-bookable-status-items-wrapper .rows'
+    };
+
+    self.init = function() {
+        if ($(self.config.bookableStatusModule).length > 0) {
+            self.bindEventHandlers();
+            self.search();
+        }
+    };
+
+    self.bindEventHandlers = function() {
+        $(self.config.bookableStatusSearchButton).on('click touchstart', self.search);
+
+        if ($(self.config.bookableStatusStart).length > 0) {
+            jQuery(self.config.bookableStatusStart).datetimepicker({
+                lang: 'zh',
+                timepicker: false,
+                format: 'Y-m-d'
+            });
+        }
+        if ($(self.config.bookableStatusEnd).length > 0) {
+            jQuery(self.config.bookableStatusEnd).datetimepicker({
+                lang: 'zh',
+                timepicker: false,
+                format: 'Y-m-d'
+            });
+        }
+    };
+
+    self.search = function(event) {
+        var start = $(self.config.bookableStatusStart).val();
+        var end = $(self.config.bookableStatusEnd).val();
+        $.getJSON('/rest/booking/my-booking-status/', {
+            bookedForStart: start,
+            bookedForEnd: end
+        }, function(response) {
+            $(self.config.bookableStatusItemsWrapperRows).empty();
+
+            $.each(response.data, function(k, v) {
+                var div = $('<div class="m-bookable-item-status"></div>');
+                var divName = $('<div class="name"></div>');
+                divName.text(k);
+                var ul = $('<ul class="holders"></ul>');
+                $.each(v, function(k, booking) {
+                    var holderName = booking.holder.name;
+                    var bookedFor = self.getYMD(booking.bookedFor);
+                    var li = $('<li class="m-holder"></li>');
+                    li.append($('<div class="holder-name">' + holderName + '</div>'));
+                    li.append($('<div class="bookedfor">' + bookedFor + '</div>'));
+                    ul.append(li);
+                });
+
+                var row = $('<div class="row"></div>');
+                row.append(divName);
+                row.append(ul);
+                row.append($('<div class="clearfix"></div>'));
+                div.append(row);
+
+                $(self.config.bookableStatusItemsWrapperRows).append(div);
+            });
+        });
+    };
+
+    self.getYMD = function(ms) {
+        var date = new Date(ms);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (d < 10) {
+            d = "0" + d;
+        }
+
+        return y + "-" + m + "-" + d;
+    }
+};

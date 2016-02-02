@@ -1,6 +1,5 @@
 package com.wiysoft.persistence.repository;
 
-import com.wiysoft.persistence.model.Bookable;
 import com.wiysoft.persistence.model.Booking;
 import com.wiysoft.persistence.model.User;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +36,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select count(b.id) from Booking b where b.bookable.id = ?2 and b.bookedFor = ?1")
     public Long findCountByBookedForAndBookable(Date bookedFor, long bookableId);
 
-    @Transactional
+    @Query("select b from Booking b where b.bookable.owner = ?1 and b.bookedFor >= ?2 and b.bookedFor < ?3")
+    public List<Booking> findBookingsByOwnerAndBookedFor(User owner, Date bookedForStart, Date bookedForEnd);
+
     @Modifying
     @Query("delete from Booking b where b.id=?1 and b.holder=?2")
     public Integer deleteByIdAndHolder(long id, User holder);
